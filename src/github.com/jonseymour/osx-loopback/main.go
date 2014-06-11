@@ -19,6 +19,7 @@ type Program struct {
 	BurstSize  int64
 	BurstDelay int64
 	BurstCount int64
+	InitialDelay int64;
 }
 
 func handler(tcpConn *net.TCPConn) {
@@ -39,6 +40,8 @@ func handler(tcpConn *net.TCPConn) {
 		burst[i] = '0' + uint8(i%10)
 	}
 	burst[program.BurstSize-1] = '\n'
+
+	time.Sleep(time.Duration(program.InitialDelay) * time.Millisecond)
 
 	if err == nil {
 		for i := int64(0); i < program.BurstCount; i++ {
@@ -148,7 +151,8 @@ func main() {
 	flag.StringVar(&role, "role", "client", "The role of this program - either client (default) or server")
 	flag.StringVar(&connection.addr, "addr", "127.0.0.1:19622", "The interface")
 	flag.Int64Var(&program.BurstSize, "burstSize", 5, "The number of bytes in each burst")
-	flag.Int64Var(&program.BurstDelay, "burstDelay", 1000, "The mumber of milliseconds in each birst")
+	flag.Int64Var(&program.BurstDelay, "burstDelay", 1000, "The mumber of milliseconds in each burst")
+	flag.Int64Var(&program.InitialDelay, "initialDelay", 200, "The mumber of milliseconds to wait before the initial burst")
 	flag.Int64Var(&program.BurstCount, "burstCount", 2, "The mumber of bursts to issue before closing the connection")
 	flag.IntVar(&closeDelay, "closeDelay", 0, "The number of milliseconds delay before closing")
 
