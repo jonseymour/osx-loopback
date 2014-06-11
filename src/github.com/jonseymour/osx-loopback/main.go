@@ -96,7 +96,7 @@ func client(conn ConnectionParams, program Program, closeDelay int) int {
 		}
 
 		go func() {
-			time.Sleep(time.Duration(program.BurstDelay) * time.Millisecond)
+			time.Sleep(time.Duration(closeDelay) * time.Millisecond)
 			if tcpconn1, ok := tcpconn.(*net.TCPConn); ok {
 				var err1 error
 				err1 = tcpconn1.CloseWrite()
