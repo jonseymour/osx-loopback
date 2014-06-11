@@ -16,10 +16,19 @@ type ConnectionParams struct {
 }
 
 type Program struct {
-	BurstSize  int64
-	BurstDelay int64
-	BurstCount int64
-	InitialDelay int64;
+	BurstSize    int64
+	BurstDelay   int64
+	BurstCount   int64
+	InitialDelay int64
+	PreambleSize int64
+}
+
+func format(p []byte) []byte {
+	for i := 0; i < len(p)-1; i++ {
+		p[i] = '0' + uint8(i%10)
+	}
+	p[len(p)-1] = '\n'
+	return p
 }
 
 func handler(tcpConn *net.TCPConn) {
@@ -33,13 +42,11 @@ func handler(tcpConn *net.TCPConn) {
 
 	log.Printf("program = %+v, addr = %s", program, tcpConn.RemoteAddr())
 
-	var burst []byte
+	var burst = format(make([]byte, program.BurstSize, program.BurstSize))
 
-	burst = make([]byte, program.BurstSize, program.BurstSize)
-	for i := 0; i < len(burst)-1; i++ {
-		burst[i] = '0' + uint8(i%10)
+	if program.PreambleSize > 0 {
+		tcpConn.Write(format(make([]byte, program.PreambleSize)))
 	}
-	burst[program.BurstSize-1] = '\n'
 
 	time.Sleep(time.Duration(program.InitialDelay) * time.Millisecond)
 
@@ -80,7 +87,13 @@ func server(conn ConnectionParams) int {
 func client(conn ConnectionParams, program Program, closeDelay int) int {
 	var err error
 	if tcpconn, err := net.Dial("tcp", conn.addr); err == nil {
+		var br = bufio.NewReader(tcpconn)
+
 		binary.Write(tcpconn, binary.LittleEndian, &program)
+
+		if program.PreambleSize > 0 {
+			br.ReadString('\n')
+		}
 
 		go func() {
 			time.Sleep(time.Duration(program.BurstDelay) * time.Millisecond)
@@ -100,7 +113,7 @@ func client(conn ConnectionParams, program Program, closeDelay int) int {
 		result = make(chan int)
 
 		go func() {
-			if written, err := io.Copy(os.Stdout, tcpconn); err == nil {
+			if written, err := io.Copy(os.Stdout, br); err == nil {
 				var expected = program.BurstSize * program.BurstCount
 				log.Printf("copied %d bytes of %d expected", written, expected)
 				if written != expected {
@@ -154,6 +167,7 @@ func main() {
 	flag.Int64Var(&program.BurstDelay, "burstDelay", 1000, "The mumber of milliseconds in each burst")
 	flag.Int64Var(&program.InitialDelay, "initialDelay", 200, "The mumber of milliseconds to wait before the initial burst")
 	flag.Int64Var(&program.BurstCount, "burstCount", 2, "The mumber of bursts to issue before closing the connection")
+	flag.Int64Var(&program.PreambleSize, "preambleSize", 69, "The mumber of bytes of preamble to generate on initial response")
 	flag.IntVar(&closeDelay, "closeDelay", 0, "The number of milliseconds delay before closing")
 
 	flag.Parse()
