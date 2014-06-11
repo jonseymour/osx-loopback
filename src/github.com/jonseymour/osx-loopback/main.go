@@ -134,7 +134,7 @@ func main() {
 	//	   * connects to the server
 	//	   * sends the parameters for the connection to the server
 	//	   * creates a goroutine to copy the connections output to stdout and count the response bytes
-	//    * delays for a specified number of milliseconds, then issues a CloseWrite on the connection
+	//         * delays for a specified number of milliseconds, then issues a CloseWrite on the connection
 	//	   * waits for the copying goroutine to finish
 	//
 
@@ -146,7 +146,7 @@ func main() {
 	var closeDelay int
 
 	flag.StringVar(&role, "role", "client", "The role of this program - either client (default) or server")
-	flag.StringVar(&connection.addr, "addr", "127.0.0.1L19622", "The interface")
+	flag.StringVar(&connection.addr, "addr", "127.0.0.1:19622", "The interface")
 	flag.Int64Var(&program.BurstSize, "burstSize", 5, "The number of bytes in each burst")
 	flag.Int64Var(&program.BurstDelay, "burstDelay", 1000, "The mumber of milliseconds in each birst")
 	flag.Int64Var(&program.BurstCount, "burstCount", 2, "The mumber of bursts to issue before closing the connection")
