@@ -37,7 +37,7 @@ If the problem has been reproduced you should see:
     0123
     2014/06/12 01:23:08 copied 5 bytes of 10 expected
 
-By way of comparison, run both the server and client locally on OSX a different port
+By way of comparison, run both the server and client locally on a different OSX port
    
     bin/main -role server -addr 127.0.0.1:20622 &
     bin/main -addr 127.0.0.1:20622
