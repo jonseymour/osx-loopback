@@ -29,7 +29,7 @@ In the Linux guest VM, start the 'main' as a server
 
 On the OSX host, start 'main' as a client
 
-    bin/main 
+    bin/main -addr 127.0.0.1:19622
 
 If the problem has been reproduced you should see:
 
