@@ -162,13 +162,13 @@ func main() {
 	var closeDelay int
 
 	flag.StringVar(&role, "role", "client", "The role of this program - either client (default) or server")
-	flag.StringVar(&connection.addr, "addr", "127.0.0.1:19622", "The interface")
-	flag.Int64Var(&program.BurstSize, "burstSize", 5, "The number of bytes in each burst")
-	flag.Int64Var(&program.BurstDelay, "burstDelay", 1000, "The mumber of milliseconds in each burst")
-	flag.Int64Var(&program.InitialDelay, "initialDelay", 200, "The mumber of milliseconds to wait before the initial burst")
-	flag.Int64Var(&program.BurstCount, "burstCount", 2, "The mumber of bursts to issue before closing the connection")
-	flag.Int64Var(&program.PreambleSize, "preambleSize", 69, "The mumber of bytes of preamble to generate on initial response")
-	flag.IntVar(&closeDelay, "closeDelay", 0, "The number of milliseconds delay before closing")
+	flag.StringVar(&connection.addr, "addr", "127.0.0.1:19622", "The connection address.")
+	flag.Int64Var(&program.BurstSize, "burstSize", 5, "The number of bytes in each burst.")
+	flag.Int64Var(&program.BurstDelay, "burstDelay", 1000, "The number of milliseconds between each burst.")
+	flag.Int64Var(&program.InitialDelay, "initialDelay", 200, "The number of milliseconds to wait before the initial burst.")
+	flag.Int64Var(&program.BurstCount, "burstCount", 2, "The number of bursts to issue before closing the connection.")
+	flag.Int64Var(&program.PreambleSize, "preambleSize", 69, "The number of bytes of preamble to generate prior to the initial response burst.")
+	flag.IntVar(&closeDelay, "closeDelay", 0, "The number of milliseconds delay before shutting down the write side of the client's socket.")
 
 	flag.Parse()
 
