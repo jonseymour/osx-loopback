@@ -106,6 +106,6 @@ Note that this ack has the correct value (Ack=75)
 
 #VirtualBox problem tickets#
 
-I found a problem ticket for an identical problem raised in 2009 which was apparently never fixed - see [4925](https://www.virtualbox.org/ticket/4925)
+I found a problem ticket for an identical problem [\#4925](https://www.virtualbox.org/ticket/4925) raised in 2009 which was apparently never fixed.
 
-I have opened a new problem ticket #13116 here - [13116](https://www.virtualbox.org/ticket/13116)
+I have opened a new problem ticket [\#13116](https://www.virtualbox.org/ticket/13116).
