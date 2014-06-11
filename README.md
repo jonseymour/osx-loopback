@@ -103,3 +103,9 @@ Note that this ack has the correct value (Ack=75)
     15   1.202300    127.0.0.1 -> 127.0.0.1    TCP 56 54246 > 20622 [ACK] Seq=42 Ack=80 Win=146896 Len=0 TSval=908532394 TSecr=90853239415  
     16   2.203456    127.0.0.1 -> 127.0.0.1    TCP 56 20622 > 54246 [FIN, ACK] Seq=80 Ack=42 Win=146944 Len=0 TSval=908533391 TSecr=908532394
     17   2.203517    127.0.0.1 -> 127.0.0.1    TCP 56 54246 > 20622 [ACK] Seq=42 Ack=81 Win=146896 Len=0 TSval=908533391 TSecr=908533391
+
+#VirtualBox problem tickets#
+
+I found a problem ticket for an identical problem raised in 2009 which was apparently never fixed - see [4925](https://www.virtualbox.org/ticket/4925)
+
+I have opened a new problem ticket #13116 here - [13116](https://www.virtualbox.org/ticket/13116)
