@@ -106,10 +106,8 @@ Note that this ack has the correct value (Ack=75)
 
 #Root cause analysis#
 
-There were several causes of this issue:
-
-* my boot2docker VM was created with version 0.7.1 which recommended a DOCKER_HOST variable of tcp://localhost:4243. Later versions of boot2docker recommend use of the host-only interface for client connectivity and the host-only interface does not suffer from these issues.
-* Virtual Box 4.3.x doesn't properly support write-side socket shutdown operations across a NAT forwarded port on the local loopback interface (see Virtual Box ticket [\#13116](https://www.virtualbox.org/ticket/13116)).
+* Virtual Box 4.3.x doesn't properly support write-side socket shutdown operations across a NAT forwarded port on a local interface 
+(see Virtual Box ticket [\#13116](https://www.virtualbox.org/ticket/13116)).
 
 #Workarounds#
 
@@ -117,12 +115,12 @@ There were several causes of this issue:
 I encountered these issues while using a boot2docker VM that was built with boot2docker v0.7.1. Later versions of boot2docker
 initialize a host-only interface and recommend use of a port on this interface for connectivity purposes. 
 
-Connections via
-the host-only interface are not susceptible to the issue since the connection from the docker client is actually terminated by
-the docker VM rather than by the Virtual Box port-forwarding logic. 
+Connections via the host-only interface are not susceptible to the issue since the connection from the docker client 
+is actually terminated by the docker VM rather than by the Virtual Box port-forwarding logic. 
 
-So, an effective workaround to this issue is simply to avoid connecting to the forwarded port on the local loopback interface 
-and instead use the docker port on the host-only interface. (e.g. something like tcp://192.168.58.103:2375 instead of tcp://localhost:2375)
+So, an effective workaround to this issue is simply to avoid connecting to a forwarded port on local interface 
+and instead use the host-only interface to the guest. In the case of boot2docker, this means something 
+like tcp://192.168.58.103:2375 instead of tcp://localhost:2375)
 
 #Problem tickets#
 
@@ -157,3 +155,4 @@ remove support for port-forwarding across the client loopback interface.
 * added note about workaround of using host-only interface instead of forwarded port on loopback interface
 * add further details of problem tickets and root cause analysis
 * removed reference to "NAT Network" fixing the problem. upon retesting the problem is, if anything worse.
+* removed mention of docker from root cause analysis which clouds the issue
