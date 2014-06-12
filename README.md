@@ -124,14 +124,6 @@ the docker VM rather than by the Virtual Box port-forwarding logic.
 So, an effective workaround to this issue is simply to avoid connecting to the forwarded port on the local loopback interface 
 and instead use the docker port on the host-only interface. (e.g. something like tcp://192.168.58.103:2375 instead of tcp://localhost:2375)
 
-##Use the NAT service (non-preferred, alternative)##
-VirtualBox 4.3.x enables the notion of a [NAT service](http://www.virtualbox.org/manual/ch06.html#network_nat_service). 
-This appears to use a different implementation of VirtualBox's LWIP code which does properly handle the shutdown of the 
-host's write socket on forwarded ports. So, another alternative is to reconfigure the VirtualBox VM to use 
-a "NAT Network" instead of a "NAT" interface. Note, however, that this has to be manually configured and 
-may break some functions of boot2docker.
-
-
 #Problem tickets#
 
 ##docker##
@@ -165,3 +157,4 @@ interface instead.
 * used go packaging conventions so that go get github.com/jonseymour/vbox-portforward now works
 * added note about workaround of using host-only interface instead of forwarded port on loopback interface
 * add further details of problem tickets and root cause analysis
+# removed reference to "NAT Network" fixing the problem. upon retesting the problem is, if anything worse.
