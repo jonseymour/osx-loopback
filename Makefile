@@ -8,19 +8,19 @@ bin/main: dist/linux_amd64/main dist/darwin_amd64/main dist/windows_amd64/main.e
 
 dist/linux_amd64/main:
 	mkdir -p dist/linux_amd64
-	GOOS=linux GOARCH=amd64 GOBIN=dist/linux_amd64 go install src/github.com/jonseymour/osx-loopback/main.go
+	GOOS=linux GOARCH=amd64 GOBIN=dist/linux_amd64 go install main.go
 
 dist/darwin_amd64/main:
 	mkdir -p dist/darwin_amd64
-	GOOS=darwin GOARCH=amd64 GOBIN=dist/darwin_amd64 go install src/github.com/jonseymour/osx-loopback/main.go
+	GOOS=darwin GOARCH=amd64 GOBIN=dist/darwin_amd64 go install main.go
 
 dist/windows_amd64/main.exe:
 	mkdir -p dist/windows_amd64
-	GOOS=windows GOARCH=amd64 GOBIN=dist/windows_amd64 go install src/github.com/jonseymour/osx-loopback/main.go
+	GOOS=windows GOARCH=amd64 GOBIN=dist/windows_amd64 go install main.go
 
 dist/windows_386/main.exe:
 	mkdir -p dist/windows_386
-	GOOS=windows GOARCH=386 GOBIN=dist/windows_386 go install src/github.com/jonseymour/osx-loopback/main.go
+	GOOS=windows GOARCH=386 GOBIN=dist/windows_386 go install main.go
 
 clean:
 	-rm -rf dist bin
