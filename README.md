@@ -143,7 +143,7 @@ I have opened a new problem ticket [\#13116](https://www.virtualbox.org/ticket/1
 
 ##boot2docker-cli##
 
-I raised [\#150](https://github.com/boot2docker/boot2docker-cli/issues/150) on boot2docker-cli to consider whether a) boot2docker-cli should
+I raised [\#150](https://github.com/boot2docker/boot2docker-cli/issues/150) on boot2docker-cli to consider whether boot2docker-cli should
 remove support for port-forwarding across the client loopback interface.
 
 #Revision history#
