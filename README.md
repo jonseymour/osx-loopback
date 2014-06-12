@@ -157,4 +157,4 @@ interface instead.
 * used go packaging conventions so that go get github.com/jonseymour/vbox-portforward now works
 * added note about workaround of using host-only interface instead of forwarded port on loopback interface
 * add further details of problem tickets and root cause analysis
-# removed reference to "NAT Network" fixing the problem. upon retesting the problem is, if anything worse.
+* removed reference to "NAT Network" fixing the problem. upon retesting the problem is, if anything worse.
