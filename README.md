@@ -104,21 +104,58 @@ Note that this ack has the correct value (Ack=75)
     16   2.203456    127.0.0.1 -> 127.0.0.1    TCP 56 20622 > 54246 [FIN, ACK] Seq=80 Ack=42 Win=146944 Len=0 TSval=908533391 TSecr=908532394
     17   2.203517    127.0.0.1 -> 127.0.0.1    TCP 56 54246 > 20622 [ACK] Seq=42 Ack=81 Win=146896 Len=0 TSval=908533391 TSecr=908533391
 
-#VirtualBox problem tickets#
+#Root cause analysis#
 
-I found a problem ticket for an identical problem [\#4925](https://www.virtualbox.org/ticket/4925) raised in 2009 which was apparently never fixed.
+There were several causes of this issue:
 
-I have opened a new problem ticket [\#13116](https://www.virtualbox.org/ticket/13116).
+* my boot2docker VM was created with version 0.7.1 which recommended a DOCKER_HOST variable of tcp://localhost:4243. Later versions of boot2docker recommend use of the host-only interface for client connectivity and the host-only interface does not suffer from these issues.
+* Virtual Box 4.3.x doesn't properly support write-side socket shutdown operations across a NAT forwarded port on the local loopback interface (see Virtual Box tock [\#13116](https://www.virtualbox.org/ticket/13116)).
 
 #Workarounds#
 
+##Use the host-only interface (preferred)##
 I encountered these issues while using a boot2docker VM that was built with boot2docker v0.7.1. Later versions of boot2docker
-initialize a host-only interface and recommend use of a port on this interface for connectivity purposes. Connections via
+initialize a host-only interface and recommend use of a port on this interface for connectivity purposes. 
+
+Connections via
 the host-only interface are not susceptible to the issue since the connection from the docker client is actually terminated by
 the docker VM rather than by the Virtual Box port-forwarding logic. 
 
 So, an effective workaround to this issue is simply to avoid connecting to the forwarded port on the local loopback interface 
 and instead use the docker port on the host-only interface. (e.g. something like tcp://192.168.58.103:2375 instead of tcp://localhost:2375)
+
+##Use the NAT service (non-preferred, alternative)##
+VirtualBox 4.3.x enables the notion of a [NAT service](http://www.virtualbox.org/manual/ch06.html#network_nat_service). 
+This appears to use a different implementation of VirtualBox's LWIP code which does properly handle the shutdown of the 
+host's write socket on forwarded ports. So, another alternative is to reconfigure the VirtualBox VM to use 
+a "NAT Network" instead of a "NAT" interface. Note, however, that this has to be manually configured and 
+may break some functions of boot2docker.
+
+
+#Problem tickets#
+
+##docker##
+
+I originally raised ticket [#6247](https://github.com/dotcloud/docker/issues/6247) to report the issue. This ticket is now closed because the root cause is in VirtualBox, not docker.
+
+I then raised pull request [#6271](https://github.com/dotcloud/docker/issues/6271) with a workaround which required configuration to achieve the workaround. This pull request has been withdrawn since it didn't address the root cause.
+
+I then raised pull request [#6327](https://github.com/dotcloud/docker/pull/6327) to remove an unnecessary use of CloseWrite() on sockets
+where stdin is not attached which works around the issue. However, now that the true root cause has been identified and boot2docker's default
+behaviour is to recommend the host-only interface, this request can probably also be withdrawn since the current Docker behaviour is not
+technically incorrect and viable workarounds exists (e.g. use the host-only interface created by later boot2docker versions).
+
+##VirtualBox##
+
+I found a problem ticket for an identical problem [\#4925](https://www.virtualbox.org/ticket/4925) raised in 2009 which was apparently never fixed.
+
+I have opened a new problem ticket [\#13116](https://www.virtualbox.org/ticket/13116).
+
+##boot2docker##
+
+I raised [\#150](https://github.com/boot2docker/boot2docker-cli/issues/150) on boot2docker-cli to consider whether a) boot2docker-cli should
+remove support for port-forwarding across the client loopback interface or, if port-forwarding needs to be retained for some reason, to use a "NAT Network"
+interface instead.
 
 #Revision history#
 
@@ -127,3 +164,4 @@ and instead use the docker port on the host-only interface. (e.g. something like
 * renamed from osx-loopback to vbox-portforward to reflect the true nature of the underyling issue
 * used go packaging conventions so that go get github.com/jonseymour/vbox-portforward now works
 * added note about workaround of using host-only interface instead of forwarded port on loopback interface
+* add further details of problem tickets and root cause analysis
