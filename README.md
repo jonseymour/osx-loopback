@@ -1,5 +1,5 @@
 #NAME#
-osx-loopback - demonstrate a problem with TCPConn.CloseWrite() on loopback OSX -> VirtualBox connections
+vbox-portforward - demonstrate a problem with TCPConn.CloseWrite() on loopback OSX -> VirtualBox connections
 
 #DESCRIPTION#
 
@@ -19,17 +19,17 @@ Build the OSX and linux versions of the test program by running
 
     make
 
-Copy dist/linux_amd64/main to /tmp into a 64bit Linux VM running under VirtualBox.
+Copy dist/linux_amd64/vbox-portforward to /tmp into a 64bit Linux VM running under VirtualBox.
 
 Add a port forward from 127.0.0.1:19622 on the VirtualBox host to port 19622 in the Linux guest
 
-In the Linux guest VM, start the 'main' as a server
+In the Linux guest VM, start the 'vbox-portforward' as a server
 
-    /tmp/main -role server -addr 0.0.0.0:19622
+    /tmp/vbox-portforward -role server -addr 0.0.0.0:19622
 
-On the OSX host, start 'main' as a client
+On the OSX host, start 'vbox-portforward' as a client
 
-    bin/main -addr 127.0.0.1:19622
+    bin/vbox-portforward -addr 127.0.0.1:19622
 
 If the problem has been reproduced you should see:
 
@@ -39,8 +39,8 @@ If the problem has been reproduced you should see:
 
 By way of comparison, run both the server and client locally on a different OSX port
    
-    bin/main -role server -addr 127.0.0.1:20622 &
-    bin/main -addr 127.0.0.1:20622
+    bin/vbox-portforward -role server -addr 127.0.0.1:20622 &
+    bin/vbox-portforward -addr 127.0.0.1:20622
 
 In this case you will see the expected result - copied 10 bytes of 10 expected.
 
@@ -109,3 +109,21 @@ Note that this ack has the correct value (Ack=75)
 I found a problem ticket for an identical problem [\#4925](https://www.virtualbox.org/ticket/4925) raised in 2009 which was apparently never fixed.
 
 I have opened a new problem ticket [\#13116](https://www.virtualbox.org/ticket/13116).
+
+#Workarounds#
+
+I encountered these issues while using a boot2docker VM that was built with boot2docker v0.7.1. Later versions of boot2docker
+initialize a host-only interface and recommend use of a port on this interface for connectivity purposes. Connections via
+the host-only interface are not susceptible to the issue since the connection from the docker client is actually terminated by
+the docker VM rather than by the Virtual Box port-forwarding logic. 
+
+So, an effective workaround to this issue is simply to avoid connecting to the forwarded port on the local loopback interface 
+and instead use the docker port on the host-only interface. (e.g. something like tcp://192.168.58.103:2375 instead of tcp://localhost:2375)
+
+#Revision history#
+
+##June 12, 2014##
+
+* renamed from osx-loopback to vbox-portforward to reflect the true nature of the underyling issue
+* used go packaging conventions so that go get github.com/jonseymour/vbox-portforward now works
+* added note about workaround of using host-only interface instead of forwarded port on loopback interface
