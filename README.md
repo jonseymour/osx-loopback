@@ -109,7 +109,7 @@ Note that this ack has the correct value (Ack=75)
 There were several causes of this issue:
 
 * my boot2docker VM was created with version 0.7.1 which recommended a DOCKER_HOST variable of tcp://localhost:4243. Later versions of boot2docker recommend use of the host-only interface for client connectivity and the host-only interface does not suffer from these issues.
-* Virtual Box 4.3.x doesn't properly support write-side socket shutdown operations across a NAT forwarded port on the local loopback interface (see Virtual Box tock [\#13116](https://www.virtualbox.org/ticket/13116)).
+* Virtual Box 4.3.x doesn't properly support write-side socket shutdown operations across a NAT forwarded port on the local loopback interface (see Virtual Box ticket [\#13116](https://www.virtualbox.org/ticket/13116)).
 
 #Workarounds#
 
